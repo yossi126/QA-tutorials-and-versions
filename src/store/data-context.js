@@ -2,8 +2,9 @@ import React from "react";
 
 const DataContext = React.createContext({
   users: [],
-  missions: [],
-  //addMissions: (mission) => {},
+  tasks: [],
+  addTask: (task) => {},
+  // fetchUsers: () => {},
 });
 
 export default DataContext;

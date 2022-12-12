@@ -1,16 +1,20 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import DataContext from "../../store/data-context";
 
-const MissionForm = () => {
-  const inputId = useRef();
-  const inputDes = useRef();
+const TaskForm = (props) => {
+  //const inputId = useRef();
+  //const inputDes = useRef();
   const [enteredId, setEnteredId] = useState("");
   const [enteredDescription, setEnteredDescription] = useState("");
   const [enteredPriority, setEnteredPriority] = useState("High");
+  const dataCtx = useContext(DataContext);
+  const history = useHistory();
 
   const dropdownPriorityHandler = (event) => {
     console.log(event.target.value);
@@ -21,7 +25,7 @@ const MissionForm = () => {
     setEnteredId(event.target.value);
   };
 
-  const DescriptionChangeHandler = (event) => {
+  const descriptionChangeHandler = (event) => {
     setEnteredDescription(event.target.value);
   };
 
@@ -33,7 +37,9 @@ const MissionForm = () => {
       description: enteredDescription,
       priority: enteredPriority,
     };
-    console.log(data);
+    //console.log(data);
+    dataCtx.addTask(data);
+    history.replace("/tasks");
     setEnteredId("");
     setEnteredDescription("");
   };
@@ -63,7 +69,7 @@ const MissionForm = () => {
             /> */}
               <textarea
                 value={enteredDescription}
-                onChange={DescriptionChangeHandler}
+                onChange={descriptionChangeHandler}
                 className="form-control"
                 rows="2"
               ></textarea>
@@ -86,4 +92,4 @@ const MissionForm = () => {
   );
 };
 
-export default MissionForm;
+export default TaskForm;
