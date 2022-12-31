@@ -1,33 +1,54 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import MainNavigation from "./components/layout/MainNavigation";
-import DataProvider from "./store/DataProvider";
+import { DataProvider } from "./store/data-context";
 import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import Users from "./pages/Users";
 import TaskForm from "./components/Tasks/TaskForm";
+import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
+import AuthContext from "./store/auth-context";
 
 const App = () => {
+  const authCtx = useContext(AuthContext);
+
   return (
     <Fragment>
       <MainNavigation />
       <DataProvider>
         <Switch>
           <Route path="/" exact>
-            <Redirect to="/dashboard" />
+            <Signup />
           </Route>
-          <Route path="/dashboard" exact>
-            <Dashboard />
-          </Route>
-          <Route path="/tasks" exact>
-            <Tasks />
-          </Route>
-          <Route path="/tasks/new-task">
-            <TaskForm />
-          </Route>
-          <Route path="/users">
-            <Users />
-          </Route>
+          {authCtx.user && (
+            <Route path="/dashboard" exact>
+              <Dashboard />
+            </Route>
+          )}
+          {authCtx.user && (
+            <Route path="/tasks" exact>
+              <Tasks />
+            </Route>
+          )}
+          {authCtx.user && (
+            <Route path="/tasks/new-task">
+              <TaskForm />
+            </Route>
+          )}
+          {authCtx.user && (
+            <Route path="/users">
+              <Users />
+            </Route>
+          )}
+          {authCtx.user && (
+            <Route path="/profile">
+              <Profile />
+            </Route>
+          )}
+          {/* <Route path="*">
+            <Redirect to="/" />
+          </Route> */}
         </Switch>
       </DataProvider>
     </Fragment>

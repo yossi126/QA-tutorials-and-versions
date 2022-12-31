@@ -14,22 +14,26 @@ const Users = () => {
   // console.log(dataCtx.users.map((element) => element.name));
   return (
     <Container>
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>First Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dataCtx.users.map((element) => (
-            <tr key={element.id}>
-              <td>{element.id}</td>
-              <td>{element.name}</td>
+      {dataCtx.loading ? (
+        <p>Loading...</p>
+      ) : (
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Email</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {dataCtx.users.map((element) => (
+              <tr key={element.uid}>
+                <td>{element.uid}</td>
+                <td>{element.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </Container>
   );
 };
