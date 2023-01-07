@@ -5,23 +5,24 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert";
 import DataContext from "../../store/data-context";
+import { serverTimestamp } from "firebase/firestore";
 
 const TaskForm = (props) => {
-  //const inputId = useRef();
-  //const inputDes = useRef();
   const [enteredId, setEnteredId] = useState("");
+  const [enteredIdIsValid, setEnteredIdIsValid] = useState(true);
   const [enteredDescription, setEnteredDescription] = useState("");
   const [enteredPriority, setEnteredPriority] = useState("High");
   const dataCtx = useContext(DataContext);
   const history = useHistory();
 
   const dropdownPriorityHandler = (event) => {
-    console.log(event.target.value);
     setEnteredPriority(event.target.value);
   };
 
   const idChangeHandler = (event) => {
+    setEnteredIdIsValid(true);
     setEnteredId(event.target.value);
   };
 
@@ -32,12 +33,19 @@ const TaskForm = (props) => {
   const submitHandler = (event) => {
     event.preventDefault();
 
+    if (enteredId.trim().length !== 6) {
+      setEnteredIdIsValid(false);
+      return;
+    }
+    setEnteredIdIsValid(true);
+
     const data = {
       id: enteredId,
       description: enteredDescription,
       priority: enteredPriority,
+      timestamp: serverTimestamp(),
     };
-    //console.log(data);
+
     dataCtx.addTask(data);
     history.replace("/tasks");
     setEnteredId("");
@@ -48,31 +56,30 @@ const TaskForm = (props) => {
       <Row>
         <Col>
           <Form onSubmit={submitHandler}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Group className="mb-3">
               <Form.Label>ID</Form.Label>
               <Form.Control
                 value={enteredId}
                 type="text"
                 placeholder="ID"
                 onChange={idChangeHandler}
+                required
               />
+              {!enteredIdIsValid && (
+                <Alert variant="danger">ID must be 6 characters long</Alert>
+              )}
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Group className="mb-3">
               <Form.Label>Description</Form.Label>
-              {/* <Form.Control
-              value={enteredDescription}
-              type="text"
-              placeholder="Description"
-              onChange={DescriptionChangeHandler}
-              rows="3"
-            /> */}
-              <textarea
+              <Form.Control
                 value={enteredDescription}
+                as="textarea"
+                placeholder="Description"
                 onChange={descriptionChangeHandler}
-                className="form-control"
-                rows="2"
-              ></textarea>
+                rows={3}
+                required
+              />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Priority</Form.Label>
