@@ -9,6 +9,8 @@ import TaskForm from "./components/Tasks/TaskForm";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import AuthContext from "./store/auth-context";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const authCtx = useContext(AuthContext);
@@ -47,10 +49,11 @@ const App = () => {
             </Route>
           )}
           {/* <Route path="*">
-            <Redirect to="/" />
+            <Redirect to="/dashboard" />
           </Route> */}
         </Switch>
       </DataProvider>
+      <ToastContainer />
     </Fragment>
   );
 };

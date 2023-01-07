@@ -6,8 +6,12 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  setPersistence,
+  browserSessionPersistence,
 } from "firebase/auth";
 import { collection, setDoc, doc } from "firebase/firestore";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AuthContext = React.createContext({
   login: (email, password) => {},
@@ -19,18 +23,26 @@ const AuthContext = React.createContext({
 
 export const AuthContextProvider = (props) => {
   const [currentUser, setCurrentUser] = useState(null);
-
   const history = useHistory();
-
   const userIsLoggedIn = !!currentUser;
-
   const collectionRef = collection(db, "users");
 
   const singupHandler = (name, email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        alert("singup sucsses");
+
+        toast.success("Sighup success", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+
         history.replace("/profile");
         setDoc(doc(collectionRef, user.uid), {
           name: name,
@@ -44,22 +56,59 @@ export const AuthContextProvider = (props) => {
       })
       .catch((error) => {
         const errorMessage = error.message;
-        alert(errorMessage);
+
+        toast.error(errorMessage, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   };
 
   const loginHandler = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        history.replace("/profile");
+    setPersistence(auth, browserSessionPersistence)
+      .then(() => {
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            history.replace("/profile");
+
+            toast.success("Welcome", {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            toast.error(errorMessage, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          });
       })
       .catch((error) => {
+        // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
-        alert(errorMessage);
-        console.log(errorCode);
       });
   };
 
@@ -74,6 +123,8 @@ export const AuthContextProvider = (props) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
+        history.replace("/profile");
+        //console.log(user);
       } else {
         // User is signed out
         history.replace("/");
