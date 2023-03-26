@@ -1,9 +1,24 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useReducer } from "react";
 import AuthContext from "../../store/auth-context";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+
+const authFormReducer = (state, action) => {
+  switch (action.type) {
+    case "EMAIL_INPUT": {
+      return { ...state, email: action.value };
+    }
+    case "NAME_INPUT": {
+      return { ...state, name: action.value };
+    }
+    case "PASSWORD_INPUT": {
+      return { ...state, password: action.value };
+    }
+  }
+  throw Error("Unknown action: " + action.type);
+};
 
 const AuthForm = () => {
   const nameInputRef = useRef();
@@ -12,6 +27,12 @@ const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const authCtx = useContext(AuthContext);
 
+  const [authFormState, dispatchAuthFormState] = useReducer(authFormReducer, {
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
@@ -19,14 +40,50 @@ const AuthForm = () => {
   const submmitHandler = (event) => {
     event.preventDefault();
 
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
     if (isLogin) {
-      authCtx.login(enteredEmail, enteredPassword);
+      // dispatchAuthFormState({
+      //   type: "NAME_INPUT",
+      //   value: "",
+      // });
+      authCtx.login(authFormState.email, authFormState.password);
     } else {
-      const enteredName = nameInputRef.current.value;
-      authCtx.singup(enteredName, enteredEmail, enteredPassword);
+      authCtx.singup(
+        authFormState.name,
+        authFormState.email,
+        authFormState.password
+      );
+      // dispatchAuthFormState({
+      //   type: "NAME_INPUT",
+      //   value: "",
+      // });
     }
+  };
+
+  const nameChangeHandler = () => {
+    dispatchAuthFormState({
+      type: "NAME_INPUT",
+      value: nameInputRef.current.value,
+    });
+  };
+
+  const emailChangeHandler = () => {
+    dispatchAuthFormState({
+      type: "EMAIL_INPUT",
+      value: emailInputRef.current.value,
+    });
+    /* 
+    const action = { type: "EMAIL_INPUT", value: emailInputRef.current.value };
+    const nextState = authFormReducer(authFormState, action);
+    //console.log(authFormState); // { age: 42 }
+    console.log(nextState); // { age: 43 }
+    */
+  };
+
+  const passwordChangeHandler = () => {
+    dispatchAuthFormState({
+      type: "PASSWORD_INPUT",
+      value: passwordInputRef.current.value,
+    });
   };
 
   return (
@@ -46,6 +103,7 @@ const AuthForm = () => {
                   placeholder="Enter name"
                   ref={nameInputRef}
                   required
+                  onChange={nameChangeHandler}
                 />
               </Form.Group>
             )}
@@ -56,6 +114,7 @@ const AuthForm = () => {
                 placeholder="Enter email"
                 ref={emailInputRef}
                 required
+                onChange={emailChangeHandler}
               />
             </Form.Group>
             <Form.Group
@@ -68,6 +127,7 @@ const AuthForm = () => {
                 placeholder="Password"
                 ref={passwordInputRef}
                 required
+                onChange={passwordChangeHandler}
               />
             </Form.Group>
             <div className="d-flex justify-content-center">
