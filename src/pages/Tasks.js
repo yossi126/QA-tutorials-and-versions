@@ -17,8 +17,8 @@ const Tasks = () => {
             <VscAdd />
           </Button>
         </Col>
-        <Col>2 of 3</Col>
-        <Col>3 of 3</Col>
+        {/* <Col>2 of 3</Col>
+        <Col>3 of 3</Col> */}
       </Row>
       <Row className="mt-5">
         <AllTasks />

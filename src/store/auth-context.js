@@ -71,37 +71,36 @@ export const AuthContextProvider = (props) => {
   };
 
   const loginHandler = (email, password) => {
+    const id = toast.loading("Please wait...", {
+      position: "bottom-center",
+    });
     setPersistence(auth, browserSessionPersistence)
       .then(() => {
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
+
             history.replace("/profile");
 
-            toast.success("Welcome", {
-              position: "top-center",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
+            toast.update(id, {
+              render: "Welcome",
+              type: "success",
+              position: "bottom-center",
+              isLoading: false,
+              autoClose: 1500,
             });
           })
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            toast.error(errorMessage, {
+
+            toast.update(id, {
+              render: errorMessage,
+              type: "error",
               position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
+              isLoading: false,
+              autoClose: 3000,
             });
           });
       })
@@ -109,6 +108,13 @@ export const AuthContextProvider = (props) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
+        toast.update(id, {
+          render: errorMessage,
+          type: "error",
+          position: "top-center",
+          isLoading: false,
+          autoClose: 3000,
+        });
       });
   };
 

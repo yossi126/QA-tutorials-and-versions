@@ -5,71 +5,60 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
 import DataContext from "../../store/data-context";
+import AuthContext from "../../store/auth-context";
+//firebase
 import { serverTimestamp } from "firebase/firestore";
 
 const TaskForm = (props) => {
-  const [enteredId, setEnteredId] = useState("");
-  const [enteredIdIsValid, setEnteredIdIsValid] = useState(true);
   const [enteredDescription, setEnteredDescription] = useState("");
   const [enteredPriority, setEnteredPriority] = useState("High");
+  const [file, setFile] = useState("");
   const dataCtx = useContext(DataContext);
+  const authCtx = useContext(AuthContext);
   const history = useHistory();
 
   const dropdownPriorityHandler = (event) => {
     setEnteredPriority(event.target.value);
   };
 
-  const idChangeHandler = (event) => {
-    setEnteredIdIsValid(true);
-    setEnteredId(event.target.value);
-  };
-
   const descriptionChangeHandler = (event) => {
     setEnteredDescription(event.target.value);
+  };
+
+  const cancelBtnHandler = () => {
+    history.replace("/tasks");
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
 
-    if (enteredId.trim().length !== 6) {
-      setEnteredIdIsValid(false);
-      return;
-    }
-    setEnteredIdIsValid(true);
+    //get the current user name
+    let username = "";
+    dataCtx.users.forEach((element) => {
+      if (element.uid === authCtx.user.uid) {
+        username = element.name;
+      }
+    });
 
     const data = {
-      id: enteredId,
+      userName: username,
       description: enteredDescription,
       priority: enteredPriority,
       timestamp: serverTimestamp(),
+      img: file.name,
     };
 
-    dataCtx.addTask(data);
+    dataCtx.addTask(data, file);
     history.replace("/tasks");
-    setEnteredId("");
     setEnteredDescription("");
   };
+
   return (
     <Container>
       <Row>
         <Col>
           <Form onSubmit={submitHandler}>
-            <Form.Group className="mb-3">
-              <Form.Label>ID</Form.Label>
-              <Form.Control
-                value={enteredId}
-                type="text"
-                placeholder="ID"
-                onChange={idChangeHandler}
-                required
-              />
-              {!enteredIdIsValid && (
-                <Alert variant="danger">ID must be 6 characters long</Alert>
-              )}
-            </Form.Group>
-
             <Form.Group className="mb-3">
               <Form.Label>Description</Form.Label>
               <Form.Control
@@ -89,8 +78,19 @@ const TaskForm = (props) => {
                 <option value="Low">Low</option>
               </Form.Select>
             </Form.Group>
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Upload image </Form.Label>
+              <Form.Control
+                type="file"
+                onChange={(event) => setFile(event.target.files[0])}
+                required
+              />
+            </Form.Group>
             <Button variant="primary" type="submit">
               Submit
+            </Button>
+            <Button variant="danger" onClick={cancelBtnHandler}>
+              Cancel
             </Button>
           </Form>
         </Col>
