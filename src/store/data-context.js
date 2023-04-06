@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { db } from "../Firebase/firebase";
 import {
   collection,
@@ -15,6 +15,7 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  listAll,
 } from "firebase/storage";
 import { v4 as uuid } from "uuid";
 import { toast } from "react-toastify";
@@ -52,6 +53,7 @@ export const DataProvider = (props) => {
     });
     setAllUsers(users);
     setIsLoading(false);
+    //first();
   };
 
   const getAllTasks = async () => {

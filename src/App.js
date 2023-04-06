@@ -8,6 +8,7 @@ import Users from "./pages/Users";
 import TaskForm from "./components/Tasks/TaskForm";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import Tutorials from "./pages/Tutorials";
 import AuthContext from "./store/auth-context";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -46,6 +47,11 @@ const App = () => {
           {authCtx.user && (
             <Route path="/profile">
               <Profile />
+            </Route>
+          )}
+          {authCtx.user && (
+            <Route path="/tutorials" exact>
+              <Tutorials />
             </Route>
           )}
           {/* <Route path="*">
