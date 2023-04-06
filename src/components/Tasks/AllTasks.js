@@ -148,12 +148,3 @@ const AllTasks = () => {
 };
 
 export default AllTasks;
-
-/**
- Date.prototype.toString ( )
- Date.prototype.toDateString ( )
- Date.prototype.toTimeString ( )
- Date.prototype.toLocaleString ( )
- Date.prototype.toLocaleDateString ( )
- Date.prototype.toLocaleTimeString ( )
- */

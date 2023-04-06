@@ -29,6 +29,9 @@ const MainNavigation = () => {
               <Nav.Link as={NavLink} to="/users">
                 Users
               </Nav.Link>
+              <Nav.Link as={NavLink} to="/tutorials">
+                Tutorials
+              </Nav.Link>
             </Nav>
           )}
 
