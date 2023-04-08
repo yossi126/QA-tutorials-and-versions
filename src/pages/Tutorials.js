@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
 import styles from "./Tutorials.module.css";
+import TutorialItem from "../components/Tutorials/TutorialItem";
 
 const Tutorials = (props) => {
   // array of obj
   const [data, setData] = useState([]);
   const [inputText, setInputText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   //check about prv state
   const [filterpath, setFilter] = useState("");
 
@@ -14,6 +16,7 @@ const Tutorials = (props) => {
 
   useEffect(() => {
     const listRef = ref(storage, `/Tutorials`);
+
     listAllFiles(listRef);
   }, []);
 
@@ -23,8 +26,11 @@ const Tutorials = (props) => {
       .then(function (result) {
         // Iterate through the list of files using a foreach loop
         result.items.forEach(function (fileRef) {
+          // getting the file name without the extension .docx
+          //name: fileRef.name.split(".")[0],
           newFileNames.push({ name: fileRef.name, uri: fileRef.toString() });
         });
+
         // Iterate through the list of prefixes using a foreach loop
         result.prefixes.forEach(function (prefixRef) {
           // Recursively call the same function on the new prefixRef
@@ -42,6 +48,7 @@ const Tutorials = (props) => {
     //check about prv state
     //setFilter(filter);
     const loadedData = [];
+    const urls = [];
     const stringPatch = `/Tutorials${filter}`;
     const listRef = ref(storage, stringPatch);
 
@@ -54,8 +61,12 @@ const Tutorials = (props) => {
         });
         res.items.forEach((itemRef) => {
           // All the items under listRef.
-          // gs is the reference from a Google Cloud Storage URI
-          loadedData.push({ name: itemRef.name, uri: itemRef.toString() });
+          // uri is the reference from a Google Cloud Storage URI
+          loadedData.push({
+            name: itemRef.name,
+            uri: itemRef.toString(),
+          });
+
           // TO DO
           // try making the file object stright from here
           /*
@@ -79,7 +90,17 @@ const Tutorials = (props) => {
     const gsReference = ref(storage, uri);
     // Get the download URL
     getDownloadURL(gsReference).then((url) => {
-      window.open(url);
+      window.open(url, "_blank");
+    });
+  };
+
+  const showFileHandler = (uri) => {
+    const gsReference = ref(storage, uri);
+    getDownloadURL(gsReference).then((url) => {
+      const view = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(
+        url
+      )}`;
+      window.open(view, "_blank");
     });
   };
 
@@ -103,11 +124,10 @@ const Tutorials = (props) => {
         <h1>Tutorials</h1>
       </div>
       <div className={styles.search}>
-        <label>Search:</label>
         <input
-          onfocus="this.value=''"
           type="text"
           label="Search"
+          placeholder="Search..."
           onChange={searchInputHandler}
         />
       </div>
@@ -127,10 +147,13 @@ const Tutorials = (props) => {
       <div className={styles.list}>
         <ul>
           {filteredData.map((file) => (
-            <>
-              <li>{file.name}</li>
-              <button onClick={() => downloadFileHandler(file.uri)}>get</button>
-            </>
+            <TutorialItem
+              key={file.name}
+              item={file}
+              onDownload={() => downloadFileHandler(file.uri)}
+              onViewFile={() => showFileHandler(file.uri)}
+              uri={file.uri}
+            />
           ))}
         </ul>
       </div>
