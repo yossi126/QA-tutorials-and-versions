@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
-import styles from "./Tutorials.module.css";
+//import styles from "./Tutorials.module.css";
 import TutorialItem from "../components/Tutorials/TutorialItem";
 
 const Tutorials = (props) => {
@@ -8,47 +8,46 @@ const Tutorials = (props) => {
   const [data, setData] = useState([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  //check about prv state
-  const [filterpath, setFilter] = useState("");
 
   //firebase
   const storage = getStorage();
+  // referance to the main path of the tutorials
+  const listRef = ref(storage, `/Tutorials`);
 
   useEffect(() => {
-    const listRef = ref(storage, `/Tutorials`);
+    setIsLoading(true);
+    listAllFiles(listRef).finally(() => setIsLoading(false));
+  }, [storage]);
 
-    listAllFiles(listRef);
-  }, []);
-
-  function listAllFiles(listRef) {
+  const listAllFiles = (listRef) => {
     let newFileNames = [];
-    listAll(listRef)
-      .then(function (result) {
-        // Iterate through the list of files using a foreach loop
-        result.items.forEach(function (fileRef) {
-          // getting the file name without the extension .docx
-          //name: fileRef.name.split(".")[0],
+    return listAll(listRef)
+      .then((result) => {
+        result.items.forEach((fileRef) => {
           newFileNames.push({ name: fileRef.name, uri: fileRef.toString() });
         });
-
         // Iterate through the list of prefixes using a foreach loop
-        result.prefixes.forEach(function (prefixRef) {
+        result.prefixes.forEach((prefixRef) => {
           // Recursively call the same function on the new prefixRef
-          listAllFiles(prefixRef);
+          // Tutorials/hardware
+          // Tutorials/pos
+          // Tutorials/selfpos
+          listAllFiles(prefixRef).then((subFiles) => {
+            newFileNames.push(...subFiles);
+          });
         });
         setData((prevdata) => [...prevdata, ...newFileNames]);
+        return newFileNames;
       })
-      .catch(function (error) {
+      .catch((error) => {
         // Handle any errors that occur
         console.error(error);
+        return [];
       });
-  }
+  };
 
   const filterChangeHandler = (filter) => {
-    //check about prv state
-    //setFilter(filter);
     const loadedData = [];
-    const urls = [];
     const stringPatch = `/Tutorials${filter}`;
     const listRef = ref(storage, stringPatch);
 
@@ -66,15 +65,6 @@ const Tutorials = (props) => {
             name: itemRef.name,
             uri: itemRef.toString(),
           });
-
-          // TO DO
-          // try making the file object stright from here
-          /*
-          const itemRefGs = itemRef.toString();
-          const gsReference = ref(storage, itemRefGs);
-          getDownloadURL(gsReference).then((url) => {
-          });
-           */
         });
         setData(loadedData);
       })
@@ -84,7 +74,6 @@ const Tutorials = (props) => {
       });
   };
 
-  // TODO - TRY DOWNLOAD THE FILE WITHOUT OPENING A NEW TAB
   const downloadFileHandler = (uri) => {
     // Create a reference from a Google Cloud Storage URI
     const gsReference = ref(storage, uri);
@@ -118,24 +107,32 @@ const Tutorials = (props) => {
     }
   });
 
+  let content;
+  if (isLoading) {
+    content = (
+      <div className="spinner-border" role="status">
+        <span className="sr-only"></span>
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className={styles.title}>
-        <h1>Tutorials</h1>
+      <div className="d-flex p-2 justify-content-center">
+        <h1 class="display-4">Tutorials</h1>
       </div>
-      <div className={styles.search}>
+      <div className="d-flex justify-content-center">
         <input
-          type="text"
-          label="Search"
-          placeholder="Search..."
+          type="search"
+          className="form-control w-25"
+          placeholder="Type to search..."
           onChange={searchInputHandler}
         />
       </div>
-      <div className={styles.filter}>
-        <label>Show:</label>
+      <div className="d-flex justify-content-center ">
         <select
-          name="type"
-          id="type"
+          className="form-select w-25 mt-2 mb-2"
+          aria-label="Default select example"
           onChange={(e) => filterChangeHandler(e.target.value)}
         >
           <option value="">All</option>
@@ -144,18 +141,22 @@ const Tutorials = (props) => {
           <option value="/selfpos">Self-pos</option>
         </select>
       </div>
-      <div className={styles.list}>
-        <ul>
-          {filteredData.map((file) => (
-            <TutorialItem
-              key={file.name}
-              item={file}
-              onDownload={() => downloadFileHandler(file.uri)}
-              onViewFile={() => showFileHandler(file.uri)}
-              uri={file.uri}
-            />
-          ))}
-        </ul>
+      <div className="d-flex p-2 justify-content-center">
+        {isLoading ? (
+          content
+        ) : (
+          <ul>
+            {filteredData.map((file) => (
+              <TutorialItem
+                key={file.name}
+                item={file}
+                onDownload={() => downloadFileHandler(file.uri)}
+                onViewFile={() => showFileHandler(file.uri)}
+                uri={file.uri}
+              />
+            ))}
+          </ul>
+        )}
       </div>
     </>
   );
