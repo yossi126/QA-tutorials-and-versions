@@ -15,14 +15,14 @@ const TutorialItem = (props) => {
     getDownloadURL(gsReference).then((url) => {
       setDownloadUrl(url);
     });
-  }, []);
+  }, [storage, props.uri]);
 
   const emailHandler = () => {
     const subject = props.item.name;
     const body = downloadUrl;
     const mailtoLink = `mailto:?subject=${encodeURIComponent(
       subject
-    )}&body=${encodeURIComponent(body)}`;
+    )}&body=Download link: ${encodeURIComponent(body)}`;
 
     window.location.href = mailtoLink;
     window.open(mailtoLink);
@@ -31,16 +31,24 @@ const TutorialItem = (props) => {
   return (
     <div className="card text-end mt-1">
       <div className="card-body">
-        <h5 className="card-title">{props.item.name}</h5>
-        <a className="me-2 btn btn-light" onClick={props.onDownload}>
-          <FiDownload />
-        </a>
-        <a className="me-2 btn btn-light" onClick={props.onViewFile}>
-          <SlEyeglass />
-        </a>
-        <button className="me-2 btn btn-primary" onClick={emailHandler}>
-          <FiMail />
-        </button>
+        <h5 className="card-title text-center">{props.item.name}</h5>
+        <div className="container d-flex justify-content-center">
+          <button
+            className="me-2 btn btn-light btn-lg"
+            onClick={props.onDownload}
+          >
+            <FiDownload />
+          </button>
+          <button
+            className="me-2 btn btn-light btn-lg"
+            onClick={props.onViewFile}
+          >
+            <SlEyeglass />
+          </button>
+          <button className="me-2 btn btn-light btn-lg" onClick={emailHandler}>
+            <FiMail />
+          </button>
+        </div>
       </div>
     </div>
   );

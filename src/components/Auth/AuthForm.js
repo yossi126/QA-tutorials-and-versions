@@ -41,10 +41,6 @@ const AuthForm = () => {
     event.preventDefault();
 
     if (isLogin) {
-      // dispatchAuthFormState({
-      //   type: "NAME_INPUT",
-      //   value: "",
-      // });
       authCtx.login(authFormState.email, authFormState.password);
     } else {
       authCtx.singup(
@@ -52,10 +48,6 @@ const AuthForm = () => {
         authFormState.email,
         authFormState.password
       );
-      // dispatchAuthFormState({
-      //   type: "NAME_INPUT",
-      //   value: "",
-      // });
     }
   };
 
@@ -135,6 +127,12 @@ const AuthForm = () => {
                 {isLogin ? "Login" : "Create Account"}
               </Button>
             </div>
+            <Form.Group
+              className="mt-3 d-flex justify-content-center"
+              controlId="formBasicCheckbox"
+            >
+              <Form.Check type="checkbox" label="Remember me" />
+            </Form.Group>
             <div className="mt-3 d-flex justify-content-center">
               <Button variant="dark" onClick={switchAuthModeHandler}>
                 {isLogin ? "Create new account" : "Login with existing account"}

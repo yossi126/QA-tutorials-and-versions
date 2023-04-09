@@ -1,5 +1,5 @@
 import React, { Fragment, useContext } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import MainNavigation from "./components/layout/MainNavigation";
 import { DataProvider } from "./store/data-context";
 import Dashboard from "./pages/Dashboard";
@@ -54,6 +54,7 @@ const App = () => {
               <Tutorials />
             </Route>
           )}
+          {/* add Redirect to the import*/}
           {/* <Route path="*">
             <Redirect to="/dashboard" />
           </Route> */}
