@@ -48,8 +48,8 @@ const Tutorials = (props) => {
 
   const filterChangeHandler = (filter) => {
     const loadedData = [];
-    const stringPatch = `/Tutorials${filter}`;
-    const listRef = ref(storage, stringPatch);
+    const stringPath = `/Tutorials${filter}`;
+    const listRef = ref(storage, stringPath);
 
     listAll(listRef)
       .then((res) => {
@@ -119,7 +119,7 @@ const Tutorials = (props) => {
   return (
     <>
       <div className="d-flex p-2 justify-content-center">
-        <h1 class="display-4">Tutorials</h1>
+        <h1 className="display-4">Tutorials</h1>
       </div>
       <div className="d-flex justify-content-center">
         <input

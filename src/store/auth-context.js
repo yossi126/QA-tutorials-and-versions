@@ -8,6 +8,8 @@ import {
   signOut,
   setPersistence,
   browserSessionPersistence,
+  browserLocalPersistence,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { collection, setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -17,6 +19,7 @@ const AuthContext = React.createContext({
   login: (email, password) => {},
   logout: () => {},
   singup: (name, email, password) => {},
+  resetEmail: (email) => {},
   user: null,
   isLoggedIn: false,
 });
@@ -33,7 +36,7 @@ export const AuthContextProvider = (props) => {
         const user = userCredential.user;
 
         toast.success("Sighup success", {
-          position: "top-center",
+          position: "bottom-center",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -43,7 +46,10 @@ export const AuthContextProvider = (props) => {
           theme: "colored",
         });
 
+        // go to the main path after sighup
         history.replace("/profile");
+
+        // update the user obj in the firestore collection
         setDoc(doc(collectionRef, user.uid), {
           name: name,
           email: user.email,
@@ -58,7 +64,7 @@ export const AuthContextProvider = (props) => {
         const errorMessage = error.message;
 
         toast.error(errorMessage, {
-          position: "top-center",
+          position: "bottom-center",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -78,9 +84,10 @@ export const AuthContextProvider = (props) => {
       .then(() => {
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
+            console.log("signed in");
             // Signed in
             const user = userCredential.user;
-
+            // go to the main path after login
             history.replace("/profile");
 
             toast.update(id, {
@@ -98,7 +105,7 @@ export const AuthContextProvider = (props) => {
             toast.update(id, {
               render: errorMessage,
               type: "error",
-              position: "top-center",
+              position: "top-right",
               isLoading: false,
               autoClose: 3000,
             });
@@ -125,6 +132,36 @@ export const AuthContextProvider = (props) => {
     });
   };
 
+  const resetEmailHandler = (email) => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        toast.success("Reset password email sent!", {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        toast.error(errorMessage, {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      });
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -146,6 +183,7 @@ export const AuthContextProvider = (props) => {
     singup: singupHandler,
     login: loginHandler,
     logout: logoutHandler,
+    resetEmail: resetEmailHandler,
     user: currentUser,
     isLoggedIn: userIsLoggedIn,
   };
