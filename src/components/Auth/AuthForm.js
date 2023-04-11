@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import ResetModal from "./ResetModal";
 
 const authFormReducer = (state, action) => {
   switch (action.type) {
@@ -78,6 +79,21 @@ const AuthForm = () => {
     });
   };
 
+  let showRememberMe = (
+    <Form.Group
+      className="mt-3 d-flex justify-content-center"
+      controlId="formBasicCheckbox"
+    >
+      <Form.Check
+        type="checkbox"
+        label="Remember me"
+        onChange={() => {
+          console.log("first");
+        }}
+      />
+    </Form.Group>
+  );
+
   return (
     <Container className="d-flex justify-content-center mt-5">
       <Card style={{ width: "25rem" }} bg="dark" text="white">
@@ -127,20 +143,24 @@ const AuthForm = () => {
                 {isLogin ? "Login" : "Create Account"}
               </Button>
             </div>
-            <Form.Group
-              className="mt-3 d-flex justify-content-center"
-              controlId="formBasicCheckbox"
-            >
-              <Form.Check type="checkbox" label="Remember me" />
-            </Form.Group>
-            <div className="mt-3 d-flex justify-content-center">
+            {isLogin && showRememberMe}
+            <div className="mt-1 d-flex flex-column ">
               <Button variant="dark" onClick={switchAuthModeHandler}>
                 {isLogin ? "Create new account" : "Login with existing account"}
               </Button>
+              <button
+                type="button"
+                className="btn btn-dark"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                Forgot password?
+              </button>
             </div>
           </Form>
         </Card.Body>
       </Card>
+      <ResetModal />
     </Container>
   );
 };
