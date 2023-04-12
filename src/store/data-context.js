@@ -15,14 +15,13 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
-  listAll,
 } from "firebase/storage";
 import { v4 as uuid } from "uuid";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DataContext = React.createContext({
-  users: [],
+  versions: [],
   tasks: [],
   loading: false,
   addTask: (task) => {},
@@ -32,9 +31,10 @@ const DataContext = React.createContext({
 });
 
 export const DataProvider = (props) => {
-  const [allUsers, setAllUsers] = useState([]);
+  const [allVersions, setAllVersions] = useState([]);
+
   const [allTasks, setAllTasks] = useState([]);
-  const users = [];
+
   const tasks = [];
   const [isLoading, setIsLoading] = useState(false);
   //firebase
@@ -44,16 +44,22 @@ export const DataProvider = (props) => {
   const unique_id = uuid();
   const small_id = unique_id.slice(0, 8);
 
-  const getAllUsers = async () => {
-    setIsLoading(true);
-    const querySnapshot = await getDocs(collection(db, "users"));
+  const getAllVersions = async () => {
+    //setIsLoading(true);
+    const versions = [];
+    const querySnapshot = await getDocs(collection(db, "updates"));
 
     querySnapshot.forEach((doc) => {
-      users.push(doc.data());
+      versions.push({
+        id: doc.id,
+        StorageLocation: doc.data().StorageLocation,
+        download: doc.data().download,
+        latestUpdate: doc.data().latestUpdate,
+        releaseDate: doc.data().releaseDate,
+      });
     });
-    setAllUsers(users);
-    setIsLoading(false);
-    //first();
+    setAllVersions(versions);
+    //setIsLoading(false);
   };
 
   const getAllTasks = async () => {
@@ -79,7 +85,8 @@ export const DataProvider = (props) => {
   };
 
   useEffect(() => {
-    getAllUsers();
+    getAllVersions();
+
     getAllTasks();
   }, []);
 
@@ -205,7 +212,7 @@ export const DataProvider = (props) => {
   };
 
   const dataContext = {
-    users: allUsers,
+    versions: allVersions,
     tasks: allTasks,
     loading: isLoading,
     addTask: addTask,

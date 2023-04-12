@@ -26,6 +26,7 @@ const AuthForm = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const [isLogin, setIsLogin] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
   const authCtx = useContext(AuthContext);
 
   const [authFormState, dispatchAuthFormState] = useReducer(authFormReducer, {
@@ -79,17 +80,21 @@ const AuthForm = () => {
     });
   };
 
+  const switchRememberMeHandler = () => {
+    setIsChecked((prevState) => !prevState);
+    console.log(isChecked);
+  };
+
   let showRememberMe = (
     <Form.Group
       className="mt-3 d-flex justify-content-center"
       controlId="formBasicCheckbox"
     >
       <Form.Check
+        checked={isChecked}
         type="checkbox"
         label="Remember me"
-        onChange={() => {
-          console.log("first");
-        }}
+        onChange={switchRememberMeHandler}
       />
     </Form.Group>
   );
