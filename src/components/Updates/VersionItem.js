@@ -35,14 +35,14 @@ const VersionItem = (props) => {
             className="me-2 btn btn-light btn-lg"
             onClick={watchFileHandler}
           >
-            <SlEyeglass />
+            <SlEyeglass size={25} />
           </button>
           <button
             type="button"
             className="me-2 btn btn-light btn-lg"
             onClick={downloadFileHandler}
           >
-            <FiDownload />
+            <FiDownload size={25} />
           </button>
         </div>
         <div className="card-footer text-body-secondary">

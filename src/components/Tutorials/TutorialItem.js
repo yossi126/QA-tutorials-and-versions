@@ -32,25 +32,29 @@ const TutorialItem = (props) => {
       <div className="p-2">
         <div className="card text-end mt-1 border-top-0 border-end-0 border-start-0 border-3">
           <div className="card-body ">
-            <h5 className="card-title text-center">{props.item.name}</h5>
+            {/* text from right to left usin the dir. 
+            The dir attribute specifies the base direction of text, either right-to-left or left-to-right.*/}
+            <h5 className="card-title text-center" dir="rtl">
+              {props.item.name}
+            </h5>
             <div className="container d-flex justify-content-center">
               <button
                 className="me-2 btn btn-light btn-lg"
                 onClick={props.onDownload}
               >
-                <FiDownload />
+                <FiDownload size={25} />
               </button>
               <button
                 className="me-2 btn btn-light btn-lg"
                 onClick={props.onViewFile}
               >
-                <SlEyeglass />
+                <SlEyeglass size={25} />
               </button>
               <button
                 className="me-2 btn btn-light btn-lg"
                 onClick={emailHandler}
               >
-                <FiMail />
+                <FiMail size={25} />
               </button>
             </div>
           </div>

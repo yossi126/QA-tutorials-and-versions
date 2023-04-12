@@ -1,46 +1,15 @@
-.header {
-  width: 100%;
-  height: 5rem;
-  background-color: #212529;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+.nav {
   display: flex;
-  justify-content: left;
-  align-items: center;
-  padding: 0 10%;
+  --bs-nav-link-hover-color: #fff;
+  /* --bs-navbar-active-color: #fff; */
+  --bs-nav-link-color: #6c757d;
+  list-style-type: none;
 }
 
-.logo {
-  font-family: "Lato", sans-serif;
-  font-size: 2rem;
-  color: white;
-  margin: 0;
+.nav a.active {
+  color: #fff;
 }
 
-.header ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: baseline;
-}
-
-.header li {
-  margin: 0 1rem;
-  color: white;
-}
-
-#logout {
-  justify-content: right;
-}
-
-.header a {
+.navlink {
   text-decoration: none;
-  color: white;
-}
-.header a:hover {
-  color: #808080;
-}
-
-.header button {
-  justify-content: right;
 }
