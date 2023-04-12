@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
-//import styles from "./Tutorials.module.css";
 import TutorialItem from "../components/Tutorials/TutorialItem";
 
 const Tutorials = (props) => {
@@ -110,7 +109,7 @@ const Tutorials = (props) => {
   let content;
   if (isLoading) {
     content = (
-      <div className="spinner-border" role="status">
+      <div className="spinner-border " role="status">
         <span className="sr-only"></span>
       </div>
     );
@@ -118,9 +117,18 @@ const Tutorials = (props) => {
 
   return (
     <>
-      <div className="d-flex p-2 justify-content-center">
+      {/* <div className="d-flex p-2 justify-content-center">
         <h1 className="display-4">Tutorials</h1>
+      </div> */}
+      <div class="jumbotron jumbotron-fluid mt-3 pb-3">
+        <div class="container text-center">
+          <h1 class="display-4">Tutorials</h1>
+          <p class="lead">
+            Guides, updates & examples about the comax pos software
+          </p>
+        </div>
       </div>
+
       <div className="d-flex justify-content-center">
         <input
           type="search"
@@ -141,11 +149,12 @@ const Tutorials = (props) => {
           <option value="/selfpos">Self-pos</option>
         </select>
       </div>
-      <div className="d-flex p-2 justify-content-center">
-        {isLoading ? (
-          content
-        ) : (
-          <ul>
+
+      {isLoading ? (
+        <div className="d-flex justify-content-center mt-3">{content}</div>
+      ) : (
+        <ul>
+          <div className="d-flex align-items-center flex-column mt-3">
             {filteredData.map((file) => (
               <TutorialItem
                 key={file.name}
@@ -155,9 +164,9 @@ const Tutorials = (props) => {
                 uri={file.uri}
               />
             ))}
-          </ul>
-        )}
-      </div>
+          </div>
+        </ul>
+      )}
     </>
   );
 };

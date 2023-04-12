@@ -8,7 +8,6 @@ import {
   signOut,
   setPersistence,
   browserSessionPersistence,
-  browserLocalPersistence,
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { collection, setDoc, doc } from "firebase/firestore";
@@ -86,7 +85,7 @@ export const AuthContextProvider = (props) => {
           .then((userCredential) => {
             console.log("signed in");
             // Signed in
-            const user = userCredential.user;
+            //const user = userCredential.user;
             // go to the main path after login
             history.replace("/profile");
 
@@ -99,7 +98,7 @@ export const AuthContextProvider = (props) => {
             });
           })
           .catch((error) => {
-            const errorCode = error.code;
+            //const errorCode = error.code;
             const errorMessage = error.message;
 
             toast.update(id, {
@@ -113,7 +112,7 @@ export const AuthContextProvider = (props) => {
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
+        //const errorCode = error.code;
         const errorMessage = error.message;
         toast.update(id, {
           render: errorMessage,
@@ -135,7 +134,7 @@ export const AuthContextProvider = (props) => {
   const resetEmailHandler = (email) => {
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        toast.success("Reset password email sent!", {
+        toast.success("Email sent!", {
           position: "bottom-center",
           autoClose: 3000,
           hideProgressBar: false,
@@ -147,7 +146,7 @@ export const AuthContextProvider = (props) => {
         });
       })
       .catch((error) => {
-        const errorCode = error.code;
+        //const errorCode = error.code;
         const errorMessage = error.message;
         toast.error(errorMessage, {
           position: "bottom-center",

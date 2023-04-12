@@ -30,6 +30,7 @@ const ResetModal = () => {
           </div>
           <div className="modal-body">
             <input
+              required
               ref={emailInputRef}
               type="text"
               className="form-control"

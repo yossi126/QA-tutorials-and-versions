@@ -18,22 +18,19 @@ const MainNavigation = () => {
     <>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand>QA</Navbar.Brand>
+          <Navbar.Brand>COMAX QA</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             {authCtx.user && (
               <Nav className="me-auto">
-                <Nav.Link as={NavLink} to="/dashboard">
-                  Dashboard
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/tasks">
-                  Tasks
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/users">
-                  Users
+                <Nav.Link as={NavLink} to="/updates">
+                  POS versions
                 </Nav.Link>
                 <Nav.Link as={NavLink} to="/tutorials">
                   Tutorials
+                </Nav.Link>
+                <Nav.Link as={NavLink} to="/tasks">
+                  Tasks
                 </Nav.Link>
               </Nav>
             )}
