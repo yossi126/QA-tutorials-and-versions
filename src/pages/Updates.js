@@ -11,9 +11,10 @@ const Updates = () => {
       </div>
 
       <ul>
-        <div class="d-flex mt-4 flex-wrap justify-content-center">
+        <div className="d-flex mt-4 flex-wrap justify-content-center">
           {dataCtx.versions.map((version) => (
             <VersionItem
+              key={version.id}
               id={version.id}
               latestUpdate={version.latestUpdate}
               download={version.download}

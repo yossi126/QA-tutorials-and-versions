@@ -23,7 +23,10 @@ const Tutorials = (props) => {
     return listAll(listRef)
       .then((result) => {
         result.items.forEach((fileRef) => {
-          newFileNames.push({ name: fileRef.name, uri: fileRef.toString() });
+          newFileNames.push({
+            name: fileRef.name.replace(/\.(docx|rtf|mp4)$/i, ""),
+            uri: fileRef.toString(),
+          });
         });
         // Iterate through the list of prefixes using a foreach loop
         result.prefixes.forEach((prefixRef) => {
@@ -61,7 +64,14 @@ const Tutorials = (props) => {
           // All the items under listRef.
           // uri is the reference from a Google Cloud Storage URI
           loadedData.push({
-            name: itemRef.name,
+            /*
+            The replace method takes a regular expression as the first parameter and a replacement string as the second parameter. 
+            The regular expression /\.docx$/i matches the string ".docx" only at the end of the string ($) and ignores the case (i flag). 
+            The replacement string is an empty string, which effectively removes the ".docx" extension from the string.
+            name: itemRef.name.replace(/\.(docx|rtf|mp4)$/i, ""),
+            uri: itemRef.toString(),
+            */
+            name: itemRef.name.replace(/\.(docx|rtf|mp4)$/i, ""),
             uri: itemRef.toString(),
           });
         });
@@ -117,13 +127,10 @@ const Tutorials = (props) => {
 
   return (
     <>
-      {/* <div className="d-flex p-2 justify-content-center">
-        <h1 className="display-4">Tutorials</h1>
-      </div> */}
-      <div class="jumbotron jumbotron-fluid mt-3 pb-3">
-        <div class="container text-center">
-          <h1 class="display-4">Tutorials</h1>
-          <p class="lead">
+      <div className="jumbotron jumbotron-fluid mt-3 pb-3">
+        <div className="container text-center">
+          <h1 className="display-4">Tutorials</h1>
+          <p className="lead">
             Guides, updates & examples about the comax pos software
           </p>
         </div>
