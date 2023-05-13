@@ -26,6 +26,7 @@ const Tutorials = (props) => {
           newFileNames.push({
             name: fileRef.name.replace(/\.(docx|rtf|mp4)$/i, ""),
             uri: fileRef.toString(),
+            fullPath: fileRef.parent.fullPath,
           });
         });
         // Iterate through the list of prefixes using a foreach loop
@@ -63,6 +64,7 @@ const Tutorials = (props) => {
         res.items.forEach((itemRef) => {
           // All the items under listRef.
           // uri is the reference from a Google Cloud Storage URI
+
           loadedData.push({
             /*
             The replace method takes a regular expression as the first parameter and a replacement string as the second parameter. 
@@ -71,10 +73,14 @@ const Tutorials = (props) => {
             name: itemRef.name.replace(/\.(docx|rtf|mp4)$/i, ""),
             uri: itemRef.toString(),
             */
+
             name: itemRef.name.replace(/\.(docx|rtf|mp4)$/i, ""),
             uri: itemRef.toString(),
+            // fullPath is the full path of the file
+            fullPath: itemRef.parent.fullPath,
           });
         });
+
         setData(loadedData);
       })
       .catch((error) => {
@@ -88,7 +94,7 @@ const Tutorials = (props) => {
     const gsReference = ref(storage, uri);
     // Get the download URL
     getDownloadURL(gsReference).then((url) => {
-      window.open(url, "_blank");
+      window.open(url);
     });
   };
 
@@ -98,7 +104,7 @@ const Tutorials = (props) => {
       const view = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(
         url
       )}`;
-      window.open(view, "_blank");
+      window.open(view);
     });
   };
 
@@ -169,6 +175,7 @@ const Tutorials = (props) => {
                 onDownload={() => downloadFileHandler(file.uri)}
                 onViewFile={() => showFileHandler(file.uri)}
                 uri={file.uri}
+                fullPath={file.fullPath}
               />
             ))}
           </div>

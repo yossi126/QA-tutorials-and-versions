@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DataContext = React.createContext({
+  users: [],
   versions: [],
   tasks: [],
   loading: false,
@@ -31,18 +32,30 @@ const DataContext = React.createContext({
 });
 
 export const DataProvider = (props) => {
+  const [allUsers, setAllUsers] = useState([]);
   const [allVersions, setAllVersions] = useState([]);
-
   const [allTasks, setAllTasks] = useState([]);
-
   const tasks = [];
+  const users = [];
   const [isLoading, setIsLoading] = useState(false);
+
   //firebase
   const storage = getStorage();
 
   //creating unique id for the picture name.
   const unique_id = uuid();
   const small_id = unique_id.slice(0, 8);
+
+  const getAllUsers = async () => {
+    setIsLoading(true);
+    const querySnapshot = await getDocs(collection(db, "users"));
+
+    querySnapshot.forEach((doc) => {
+      users.push(doc.data());
+    });
+    setAllUsers(users);
+    //setIsLoading(false);
+  };
 
   const getAllVersions = async () => {
     //setIsLoading(true);
@@ -85,8 +98,8 @@ export const DataProvider = (props) => {
   };
 
   useEffect(() => {
+    getAllUsers();
     getAllVersions();
-
     getAllTasks();
   }, []);
 
@@ -212,6 +225,7 @@ export const DataProvider = (props) => {
   };
 
   const dataContext = {
+    users: allUsers,
     versions: allVersions,
     tasks: allTasks,
     loading: isLoading,

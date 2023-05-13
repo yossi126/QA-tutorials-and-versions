@@ -55,11 +55,8 @@ export const AuthContextProvider = (props) => {
           uid: user.uid,
         });
       })
-      .then(() => {})
-      .catch((e) => {
-        console.log(e.message);
-      })
       .catch((error) => {
+        const errorCode = error.code;
         const errorMessage = error.message;
 
         toast.error(errorMessage, {
@@ -76,37 +73,40 @@ export const AuthContextProvider = (props) => {
   };
 
   const loginHandler = (email, password) => {
-    const id = toast.loading("Please wait...", {
-      position: "bottom-center",
-    });
     setPersistence(auth, browserSessionPersistence)
       .then(() => {
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
-            console.log("signed in");
+            //console.log("signed in");
             // Signed in
             //const user = userCredential.user;
             // go to the main path after login
             history.replace("/profile");
 
-            toast.update(id, {
-              render: "Welcome",
-              type: "success",
+            toast.success("Welcome 👋", {
               position: "bottom-center",
-              isLoading: false,
-              autoClose: 1500,
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
             });
           })
           .catch((error) => {
-            //const errorCode = error.code;
+            const errorCode = error.code;
             const errorMessage = error.message;
 
-            toast.update(id, {
-              render: errorMessage,
-              type: "error",
-              position: "top-right",
-              isLoading: false,
+            toast.error(errorCode, {
+              position: "bottom-center",
               autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
             });
           });
       })
@@ -114,12 +114,15 @@ export const AuthContextProvider = (props) => {
         // Handle Errors here.
         //const errorCode = error.code;
         const errorMessage = error.message;
-        toast.update(id, {
-          render: errorMessage,
-          type: "error",
-          position: "top-center",
-          isLoading: false,
+        toast.error(errorMessage, {
+          position: "bottom-center",
           autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
         });
       });
   };
@@ -134,7 +137,7 @@ export const AuthContextProvider = (props) => {
   const resetEmailHandler = (email) => {
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        toast.success("Email sent!", {
+        toast.success("Email sent! **check spam**", {
           position: "bottom-center",
           autoClose: 3000,
           hideProgressBar: false,
@@ -166,7 +169,6 @@ export const AuthContextProvider = (props) => {
       if (user) {
         setCurrentUser(user);
         history.replace("/profile");
-        //console.log(user);
       } else {
         // User is signed out
         history.replace("/");
