@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/QA-tutorials-and-versions/static/css/main.73def377.css",
+    "main.js": "/QA-tutorials-and-versions/static/js/main.a79e07ed.js",
+    "index.html": "/QA-tutorials-and-versions/index.html",
+    "main.73def377.css.map": "/QA-tutorials-and-versions/static/css/main.73def377.css.map",
+    "main.a79e07ed.js.map": "/QA-tutorials-and-versions/static/js/main.a79e07ed.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.73def377.css",
+    "static/js/main.a79e07ed.js"
+  ]
+}
