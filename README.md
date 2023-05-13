@@ -9,6 +9,6 @@ https://yossi126.github.io/QA-tutorials-and-versions/
 
 ## Screenshots
 
-![Example Image](https://drive.google.com/uc?id=1Mu3aA8Q06DjoZZ9JOtkyMKKhoFmvNLX7))
+![Example Image](https://drive.google.com/uc?id=1Mu3aA8Q06DjoZZ9JOtkyMKKhoFmvNLX7)
 
 
