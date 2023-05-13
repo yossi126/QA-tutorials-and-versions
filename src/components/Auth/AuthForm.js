@@ -80,25 +80,6 @@ const AuthForm = () => {
     });
   };
 
-  const switchRememberMeHandler = () => {
-    setIsChecked((prevState) => !prevState);
-    console.log(isChecked);
-  };
-
-  let showRememberMe = (
-    <Form.Group
-      className="mt-3 d-flex justify-content-center"
-      controlId="formBasicCheckbox"
-    >
-      <Form.Check
-        checked={isChecked}
-        type="checkbox"
-        label="Remember me"
-        onChange={switchRememberMeHandler}
-      />
-    </Form.Group>
-  );
-
   return (
     <Container className="d-flex justify-content-center mt-5">
       <Card style={{ width: "25rem" }} bg="dark" text="white">
@@ -148,7 +129,7 @@ const AuthForm = () => {
                 {isLogin ? "Login" : "Create Account"}
               </Button>
             </div>
-            {isLogin && showRememberMe}
+
             <div className="mt-1 d-flex flex-column ">
               <Button variant="dark" onClick={switchAuthModeHandler}>
                 {isLogin ? "Create new account" : "Login with existing account"}

@@ -9,6 +9,9 @@ import Profile from "./pages/Profile";
 import Tutorials from "./pages/Tutorials";
 import Updates from "./pages/Updates";
 import AuthContext from "./store/auth-context";
+import AddTutorial from "./components/ProfileSettings/AddTutorial";
+import AddVersion from "./components/ProfileSettings/AddVersion";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -23,20 +26,29 @@ const App = () => {
           <Route path="/" exact>
             <Signup />
           </Route>
-          {authCtx.user && (
+          {/* {authCtx.user && (
             <Route path="/tasks" exact>
               <Tasks />
             </Route>
           )}
-          {authCtx.user && (
+          {authCtx.user.email === "yossi126@gmail.com" (
             <Route path="/tasks/new-task">
               <TaskForm />
             </Route>
-          )}
-
+          )} */}
           {authCtx.user && (
-            <Route path="/profile">
+            <Route path="/profile" exact>
               <Profile />
+            </Route>
+          )}
+          {authCtx.user && (
+            <Route path="/profile/add-tutorial">
+              <AddTutorial />
+            </Route>
+          )}
+          {authCtx.user && (
+            <Route path="/profile/add-version">
+              <AddVersion />
             </Route>
           )}
           {authCtx.user && (
